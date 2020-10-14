@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAÖ Yönlendirme Servisi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            padding: 0;
+            margin: 0;
+            outline: 0;
+            font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+        }
+
+        html, body {
+            background-color: rgb(68, 68, 68);
+            color: rgb(250, 250, 250);
+        }
+
+        .title {
+            font-size: 6rem;
+            text-decoration: underline;
+            color: #EF5858;
+            text-shadow: 2px 2px 1px black;
+        }
+
+        .btn {
+            width: 16rem;
+            opacity: 0.8;
+            cursor: pointer;
+            border: 0;
+            border-radius: 3px;
+            transition: opacity 300ms ease-in-out;
+        }
+
+        .btn:hover {
+            opacity: 1;
+        }
+
+        .btn.go-back {
+            background-color: #43B581;
+            color: rgb(250, 250, 250);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+        }
+
+        .btn.redirect {
+            background-color: #EF5858;
+            color: rgb(250, 250, 250);
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+        }
+
+        .description {
+            font-size: 1.6rem;
+            line-height: 2.8rem;
+        }
+
+        .description .url {
+            font-size: 1.8rem;
+            background-color: yellow;
+            color: black;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <center style="padding-top: 2rem;">
+
+        <h1 class="title" lang-key="title"></h1>
+        <br>
+        <p class="description" lang-key="description"></p>
+        <br>
+        <a class="btn-link go-back" href="/">
+            <button class="btn go-back" lang-key="goBackButton"></button>
+        </a>
+        <a class="btn-link redirect" href="/">
+            <button class="btn redirect" lang-key="redirectButton"></button>
+        </a>
+    </center>
+
+    <script>
+
+        const langKeys = {
+            "en": {
+                "title": "Attention!",
+                "description": "{url}",
+                "redirectButton": "Redirect",
+                "goBackButton": "Go Back"
+            },
+            "tr": {
+                "title": "Dikkat!",
+                "description": "{url} adresine yönlendiriliyorsunuz!",
+                "redirectButton": "Yönlendir",
+                "goBackButton": "Geri Git"
+            }
+        }
+
+        const url = new URL(location.href);
+
+        const lang = (url.searchParams.get("lang") || navigator.language || navigator.languages[0] || "en").split("-")[0].toLowerCase();
+
+        document.querySelectorAll(`[lang-key]`).forEach(element=>{
+            element.textContent = langKeys[lang][element.getAttribute("lang-key")];
+        })
+
+        const titleElement = document.querySelector(".title");
+        const descriptionElement = document.querySelector(".description");
+        const redirectLink = document.querySelector(".btn-link.redirect");
+        const goBackLink = document.querySelector(".btn-link.go-back");
+
+        goBackLink.setAttribute("href", url.searchParams.get("back") || "/");
+        redirectLink.setAttribute("href", url.searchParams.get("go") || "/");
+
+        descriptionElement.innerHTML = descriptionElement.innerHTML.replace("{url}",`<span class="url">${url.searchParams.get("go") || "/"}</span><br>`);
+
+    </script>
+</body>
+
+</html>
